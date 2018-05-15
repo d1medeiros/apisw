@@ -18,27 +18,27 @@ public class PlanetaController {
     @Autowired
     private PlanetaService planetaService;
 
-    @GetMapping("/planetas")
+    @GetMapping("/api/planetas")
     public List<Planeta> getTodosPlaneta() {
         return planetaService.buscaTodos();
     }
 
-    @GetMapping("/planeta")
+    @GetMapping("/api/planeta")
     public Planeta getPlanetaPorNome(@RequestParam(name = "nome", required = true) String nome) {
         return planetaService.buscaPorNome(nome);
     }
 
-    @GetMapping("/planeta/{id}")
+    @GetMapping("/api/planeta/{id}")
     public Planeta getPlanetaPorId(@PathVariable("id") Integer id){
         return planetaService.buscaPorId(id);
     }
 
-    @PostMapping("/planeta")
+    @PostMapping("/api/planeta")
     public void getPlanetaPorId(@Valid Planeta planeta) throws Exception {
         planetaService.adiciona(planeta);
     }
 
-    @DeleteMapping("/planeta/{id}")
+    @DeleteMapping("/api/planeta/{id}")
     public void removePorId(@PathVariable("id") Integer id) {
         planetaService.removePorId(id);
     }
