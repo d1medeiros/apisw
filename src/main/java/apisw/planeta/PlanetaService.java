@@ -39,13 +39,15 @@ public class PlanetaService {
     }
 
     public void adiciona(Planeta planeta) {
-        
-        getPlanetaPorFilme(planeta);
-        
-//        planetaRepository.save(planeta);
+
+        int quantidadePorFilme = getPlanetaPorFilme(planeta);
+        planeta.setAparicoesPorFilme(quantidadePorFilme);
+        planetaRepository.save(planeta);
     }
 
-    private void getPlanetaPorFilme(Planeta planeta) {
+    private int getPlanetaPorFilme(Planeta planeta) {
+        int quantidadeDeFilmes = 0;
+
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
@@ -53,24 +55,21 @@ public class PlanetaService {
             headers.add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36");
             HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
-//            ResponseEntity<PlanetaSWAPI[]> exchange = restTemplate.exchange("https://swapi.co/api/planets/", HttpMethod.GET,entity,PlanetaSWAPI[].class);
-            ResponseEntity<PlanetaSWAPI[]> exchange = restTemplate.getForEntity("https://swapi.co/api/planets/", PlanetaSWAPI[].class);
-//            List<PlanetaSWAPI> listaPlanetaSWAPI = Stream.of(exchange.getBody())
-//                    .filter(planetaDaApi -> planetaDaApi.getName().equals(planeta.getNome()))
-//                    .collect(Collectors.toList());
-//            
-//            System.out.println(listaPlanetaSWAPI.size());
-//            .findFirst().get();
-//            PlanetaSWAPI planetaSWAPI = 
-//            int quantidadeDeFilmes = planetaSWAPI.getFilms().size();
-            
-            
-            
+            ResponseEntity<ListaPlanetaSWAPI> exchange = restTemplate.exchange("https://swapi.co/api/planets/", HttpMethod.GET, entity, ListaPlanetaSWAPI.class);
+            ListaPlanetaSWAPI exchangePlanet = exchange.getBody();
+
+            List<PlanetaSWAPI> listaPlanetaSWAPI = Stream.of(exchangePlanet.getResults()).filter(planetaDaApi -> planetaDaApi.getName().equals("Endor")).collect(Collectors.toList());
+            if (listaPlanetaSWAPI.size() != 1)
+                return -1;
+
+            String[] films = listaPlanetaSWAPI.get(0).getFilms();
+            quantidadeDeFilmes = films.length;
+
         } catch (Exception ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
 
         }
-        
+        return quantidadeDeFilmes;
     }
 
     public void removePorId(Integer id) {
