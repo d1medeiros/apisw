@@ -21,7 +21,9 @@ public class PlanetaService {
 
     @Autowired
     private PlanetaRepository planetaRepository;
-
+    private static int NAO_EXISTE = -1;
+    private static int PRIMEIRO_DA_LISTA = 0;
+    
     public List<Planeta> buscaTodos() {
         List<Planeta> listaPlanetas = new ArrayList<>();
         planetaRepository.findAll().forEach(planeta -> listaPlanetas.add(planeta));
@@ -60,9 +62,9 @@ public class PlanetaService {
 
             List<PlanetaSWAPI> listaPlanetaSWAPI = Stream.of(exchangePlanet.getResults()).filter(planetaDaApi -> planetaDaApi.getName().equals("Endor")).collect(Collectors.toList());
             if (listaPlanetaSWAPI.size() != 1)
-                return -1;
+                return NAO_EXISTE;
 
-            String[] films = listaPlanetaSWAPI.get(0).getFilms();
+            String[] films = listaPlanetaSWAPI.get(PRIMEIRO_DA_LISTA).getFilms();
             quantidadeDeFilmes = films.length;
 
         } catch (Exception ex) {
