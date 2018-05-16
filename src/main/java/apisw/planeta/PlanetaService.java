@@ -60,7 +60,7 @@ public class PlanetaService {
             ResponseEntity<ListaPlanetaSWAPI> exchange = restTemplate.exchange("https://swapi.co/api/planets/", HttpMethod.GET, entity, ListaPlanetaSWAPI.class);
             ListaPlanetaSWAPI exchangePlanet = exchange.getBody();
 
-            List<PlanetaSWAPI> listaPlanetaSWAPI = Stream.of(exchangePlanet.getResults()).filter(planetaDaApi -> planetaDaApi.getName().equals("Endor")).collect(Collectors.toList());
+            List<PlanetaSWAPI> listaPlanetaSWAPI = Stream.of(exchangePlanet.getResults()).filter(planetaDaApi -> planetaDaApi.getName().equalsIgnoreCase(planeta.getNome())).collect(Collectors.toList());
             if (listaPlanetaSWAPI.size() != 1)
                 return NAO_EXISTE;
 
